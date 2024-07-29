@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shoes_ui/presentation/providers/shoes/shoes_provider.dart';
 import 'package:shoes_ui/presentation/widgets/widgets.dart';
 
 class ShoesDescPage extends StatelessWidget {
@@ -15,7 +18,9 @@ class ShoesDescPage extends StatelessWidget {
             top: 55,
             left: 10,
             child: FloatingActionButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pop(context);
+              },
               backgroundColor: Colors.transparent,
               elevation: 0,
               highlightElevation: 0,
@@ -123,7 +128,11 @@ class _MontoBuyNow extends StatelessWidget {
             style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
           ),
           const Spacer(),
-          const CustomBoton(text: 'Buy now', width: 120, heigth: 40),
+          Bounce(
+            delay: const Duration(seconds: 1),
+            from: 8,
+            child: const CustomBoton(text: 'Buy now', width: 120, heigth: 40),
+          ),
         ],
       ),
     );
@@ -142,17 +151,33 @@ class _ColorsYmore extends StatelessWidget {
             children: [
               Positioned(
                 left: 90,
-                child: _BotonColor(color: Color(0xffC6D642)),
+                child: _BotonColor(
+                  color: Color(0xffC6D642),
+                  index: 4,
+                  img: 'assets/verde.png',
+                ),
               ),
               Positioned(
                 left: 60,
-                child: _BotonColor(color: Color(0xffFFAD29)),
+                child: _BotonColor(
+                  color: Color(0xffFFAD29),
+                  index: 3,
+                  img: 'assets/amarillo.png',
+                ),
               ),
               Positioned(
                 left: 30,
-                child: _BotonColor(color: Color(0xff2099F1)),
+                child: _BotonColor(
+                  color: Color(0xff2099F1),
+                  index: 2,
+                  img: 'assets/azul.png',
+                ),
               ),
-              _BotonColor(color: Color(0xff364D56)),
+              _BotonColor(
+                color: Color(0xff364D56),
+                index: 1,
+                img: 'assets/negro.png',
+              ),
             ],
           )),
           // Spacer(),
@@ -168,18 +193,30 @@ class _ColorsYmore extends StatelessWidget {
   }
 }
 
-class _BotonColor extends StatelessWidget {
+class _BotonColor extends ConsumerWidget {
   final Color color;
-  const _BotonColor({required this.color});
+  final String img;
+  final int index;
+  const _BotonColor(
+      {required this.color, required this.index, required this.img});
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 45,
-      height: 45,
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.circle,
+  Widget build(BuildContext context, WidgetRef ref) {
+    return GestureDetector(
+      onTap: () {
+        ref.read(shoesProvider.notifier).assetsImageChange(img);
+      },
+      child: FadeInLeft(
+        delay: Duration(milliseconds: index * 100),
+        duration: const Duration(milliseconds: 600),
+        child: Container(
+          width: 45,
+          height: 45,
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.circle,
+          ),
+        ),
       ),
     );
   }
